@@ -1,2 +1,21 @@
-venv
+# OS-specific files
+.DS_Store  
+
+# IDE settings
 .idea/
+.vscode/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Logs and temporary files
+*.log
+logs/
+
+# Environment / secret files
+.env
