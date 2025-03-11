@@ -1,0 +1,21 @@
+# 1. Secret files
+.env
+
+# 2. Git service files
+.git
+.gitignore
+
+# 3. macOS system file
+.DS_Store
+
+# 4. IDE settings (PyCharm, VSCode)
+.idea/
+.vscode/
+
+# 5. Python cache
+__pycache__/
+*.pyc
+
+# 6. Local virtual environments
+.venv/
+venv/
