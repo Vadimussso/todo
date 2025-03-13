@@ -1,8 +1,46 @@
 version: '3'
 
-tasks:
-  run:
-    cmds:
-      - fastapi dev main.py
+dotenv: ['env']
 
+tasks:
+  up:
+    desc: "Run the application"
+    cmds:
+      - docker-compose --env-file .env up -d
+    silent: false
+
+  down:
+    desc: "Stop and remove all containers"
+    cmds:
+      - docker-compose down
+    silent: false
+
+
+  containers:
+    desc: "Show all running and stopped containers"
+    cmds:
+      - docker ps -a
+    silent: false
+
+
+  test:
+    desc: "Start containers and run tests using .env_test"
+    cmds:
+      # 1. Start Postgres and migrations in the test environment
+      - docker-compose --env-file .env_test up -d todo_db migrations
+      # 2. Run tests inside the application container and remove container after tests
+      - docker-compose --env-file .env_test run --rm todo_api pytest tests/
+      # 3. Rollback all migrations
+      - docker-compose --env-file .env_test run --rm migrations down
+      # 4. After tests, remove everything to avoid storing test data
+      - docker-compose --env-file .env_test down -v
+    silent: false
+
+
+  migrate-new:
+    desc: "Create a new migration file"
+    cmds:
+      # Usage: task migrate-new NAME=migration_name"
+      - migrate create -ext sql -dir ./migrations -seq -digits 3 {{.NAME}}
+    silent: false
 

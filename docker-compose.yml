@@ -1,5 +1,6 @@
 version: '3.8'
 
+# --- (1) app FastAPI ---
 services:
   todo_api:
     build: .
@@ -7,6 +8,8 @@ services:
     depends_on:
       todo_db:
         condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     volumes:
       - .:/app
     environment:
@@ -19,7 +22,7 @@ services:
 
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
-
+# --- (2) db Postgres ---
   todo_db:
     image: postgres:15-alpine
     restart: always
@@ -36,6 +39,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - todo_network
+
+# --- (3) migration service (golang-migrate) ---
+  migrations:
+    image: migrate/migrate:latest
+    restart: "no"
+    depends_on:
+      todo_db:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/migrations
+    command: [
+      "-path", "/migrations",
+      "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@todo_db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",
+      "up"
+    ]
     networks:
       - todo_network
 
