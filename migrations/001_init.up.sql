@@ -4,6 +4,6 @@ CREATE TABLE todos (
     description TEXT,
     completed BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE NOT NULL
+    updated_at TIMESTAMP WITH TIME ZONE
 );
 
