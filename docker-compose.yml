@@ -13,7 +13,7 @@ services:
     volumes:
       - .:/app
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@todo_db:${POSTGRES_PORT}/${POSTGRES_DB}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       - DEBUG=${DEBUG}
     ports:
       - "8000:8000"
@@ -53,7 +53,7 @@ services:
       - ./migrations:/migrations
     command: [
       "-path", "/migrations",
-      "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@todo_db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",
+      "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",
       "up"
     ]
     networks:
